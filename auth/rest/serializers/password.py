@@ -5,6 +5,15 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 User = get_user_model()
 
 
+
+def verify_token(user,token):
+        print(f"[DEBUG] Verifying token for user={user.email}")
+        print(f"[DEBUG] Token valid? {PasswordResetTokenGenerator().check_token(user, token)}")
+        token_generator = PasswordResetTokenGenerator()
+        if not token_generator.check_token(user, token):
+                raise serializers.ValidationError("Invalid or expired token or already used.")
+
+
 # check whether user exist or not with email
 class ForgotPasswordSerializer(serializers.Serializer):
     email = serializers.EmailField()
@@ -14,7 +23,7 @@ class ForgotPasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError("User with this email does not exist.")
         return value
 
-#matches the token
+#verify the token
 class TokenSerializer(serializers.Serializer):
     token = serializers.CharField(write_only=True)    
 
@@ -24,11 +33,13 @@ class TokenSerializer(serializers.Serializer):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise serializers.ValidationError("Invalid user ID.")
+            raise serializers.ValidationError("Invalid user")
         
-        token_generator = PasswordResetTokenGenerator()
-        if not token_generator.check_token(user, data["token"]):
-            raise serializers.ValidationError("Invalid or expired token.")
+        # token_generator = PasswordResetTokenGenerator()
+        # if not token_generator.check_token(user, data["token"]):
+        #     raise serializers.ValidationError("Invalid or expired token.")
+
+        verify_token(user,data['token'])
         
         return data
 
@@ -43,7 +54,7 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
         model = User
         fields = [ 'new_password','confirm_password']
     
-    email=None
+   
     def validate(self, data):
        
         try:
@@ -51,6 +62,8 @@ class ResetPasswordSerializer(serializers.ModelSerializer):
           
         except User.DoesNotExist:
             raise serializers.ValidationError("Invalid user ")
+        
+        verify_token(self.user,self.context.get('token'))
         
         if data['new_password'] != data['confirm_password']:
             raise serializers.ValidationError("Passwords do not match.")

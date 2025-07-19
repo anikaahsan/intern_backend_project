@@ -178,4 +178,4 @@ DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
 #pasword reset time limit(in seconds)
-PASSWORD_RESET_TIMEOUT=60*2
+PASSWORD_RESET_TIMEOUT=60*5 #(5 min)
