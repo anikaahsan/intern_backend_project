@@ -177,5 +177,5 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')
 
 
-#pasword reset time limit(in seconds)
+#pasword reset time limit(in seconds)(expiry)
 PASSWORD_RESET_TIMEOUT=60*5 #(5 min)

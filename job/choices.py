@@ -16,3 +16,9 @@ class ApplicationStatusChoices(models.TextChoices):
   REJECTED = 'REJECTED','Rejected'
   PENDING = 'PENDING' ,'Pending'
   NOT_SET = "NOT_SET", "Not Set"
+
+
+
+class JobStatusChoices(models.TextChoices):
+    ACTIVE = "ACTIVE", "Active"
+    INACTIVE = "INACTIVE", "Inactive"

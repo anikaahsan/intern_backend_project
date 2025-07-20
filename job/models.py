@@ -5,9 +5,11 @@ from multiselectfield import MultiSelectField
 
 from core.models import User
 from shared.base_model import BaseModel
-from job.choices import SkillChoices,ApplicationStatusChoices
+from job.choices import SkillChoices,ApplicationStatusChoices,JobStatusChoices
 
 class Job(BaseModel):
+
+    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'recruiter'})
   
     job_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=255)
@@ -15,9 +17,10 @@ class Job(BaseModel):
     location = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     deadline = models.DateField()
+    status=models.CharField(max_length=20,choices=JobStatusChoices,default=JobStatusChoices.ACTIVE)
+
+  
     
-
-
     def __str__(self):
         return f"{self.title} ({self.status})"
     
@@ -27,7 +30,7 @@ class Job(BaseModel):
 class Application(models.Model):
     
 
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE,related_name='application')
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE,related_name='application', limit_choices_to={'role': 'candidate'})
     job = models.ForeignKey(Job, on_delete=models.CASCADE,related_name='application')
 
    
