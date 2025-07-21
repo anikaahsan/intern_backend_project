@@ -8,5 +8,5 @@ urlpatterns = [
   
 
     path('/list', ApplicationListView.as_view(), name='application-list'),
-    path('/apply', ApplyToJobView.as_view(), name='apply-job'),
+    path('/apply/<int:job_id>', ApplyToJobView.as_view(), name='apply-job'),
 ]

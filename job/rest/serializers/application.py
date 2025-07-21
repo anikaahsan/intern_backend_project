@@ -4,7 +4,7 @@ from datetime import date
 class ApplicationSerializer(serializers.ModelSerializer):
      class Meta:
         model=Application
-        fields=['job','skills','expected_salary','resume','email','contact']
+        fields=['skills','expected_salary','resume','email','contact']
 
 
      def __str__(self):
@@ -12,9 +12,14 @@ class ApplicationSerializer(serializers.ModelSerializer):
      
      def validate(self, attrs):
          print(attrs)
-         job=attrs['job']
+         job_id = self.context['job_id']
+         try:
+            job = Job.objects.get(pk=job_id)
+         except Job.DoesNotExist:
+            raise serializers.ValidationError("Job does not exist.")
+         
          user = self.context['request'].user
-         job=Job.objects.get(pk=attrs['job'])
+         
          if not Application.objects.filter(candidate=user,job=job):
               raise serializers.ValidationError("You have already applied to this job.")
          if not date.today() < job.deadline :

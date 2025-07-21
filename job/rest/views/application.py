@@ -12,9 +12,10 @@ class ApplyToJobView(CreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated, IsCandidate]
     parser_classes = [MultiPartParser, FormParser] # required for file upload
+    lookup_field='job_id'
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data,context={"job_id": request.query_params["job_id"]})
         serializer.is_valid(raise_exception =  True)
         serializer.save(candidate=request.user)
         return response(serializer.data,status=status.HTTP_201_CREATED)
@@ -26,8 +27,8 @@ class ApplicationListView(ListAPIView):
     permission_classes = [IsAuthenticated, IsCandidate,IsRecruiter]
 
     def get_queryset(self):
-        if self.request.user.role == 'candidate' :
+        if self.request.user.role == 'CANDIDATE' :
            return Application.objects.filter(candidate=self.request.user)
         
-        if self.request.user.role == 'recruiter' :
+        if self.request.user.role == 'RECRUITER' :
             return Application.objects.all()

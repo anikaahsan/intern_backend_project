@@ -27,11 +27,32 @@ class JobCreateView(CreateAPIView):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
         
 
-class JobDetailView(RetrieveUpdateDestroyAPIView):
+class JobDetailRecruiterView(RetrieveUpdateDestroyAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
     permission_classes = [IsAuthenticated, IsRecruiter] 
     lookup_field = "job_id"   
+
+
+class JobDetailView(RetrieveAPIView):
+    queryset = Job.objects.all()
+    serializer_class = JobSerializer
+    permission_classes = [AllowAny] 
+    lookup_field = "job_id"
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        # You can customize the response data here
+        custom_data = {
+            "job_details": serializer.data,
+           
+            "Apply here": f"http://127.0.0.1:8000/api/v1/job/application/apply/{instance.job_id}",
+        }
+
+        return Response(custom_data, status=status.HTTP_200_OK)
+
 
 
 

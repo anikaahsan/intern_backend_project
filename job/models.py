@@ -11,7 +11,7 @@ User=get_user_model()
 
 class Job(BaseModel):
 
-    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'recruiter'},null=True)
+    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'RECRUITER'},null=True)
   
     job_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=255)
@@ -31,7 +31,7 @@ class Job(BaseModel):
 class Application(models.Model):
     
 
-    candidate = models.ForeignKey(User, on_delete=models.CASCADE,related_name='application', limit_choices_to={'role': 'candidate'})
+    candidate = models.ForeignKey(User, on_delete=models.CASCADE,related_name='application', limit_choices_to={'role': 'CANDIDATE'})
     job = models.ForeignKey(Job, on_delete=models.CASCADE,related_name='application')
 
    
