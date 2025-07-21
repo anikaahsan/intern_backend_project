@@ -12,6 +12,12 @@ class UserRegisterView(CreateAPIView):
     serializer_class = UserRegisterSerializer
     permission_classes = [AllowAny]
 
-    def perform_create(self, serializer):
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data,context={'user':request.user})
+        serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        
         send_welcome_email(user)
+
+        return Response({'detail': 'User registered successfully. Welcome email sent.'}, status=status.HTTP_201_CREATED)

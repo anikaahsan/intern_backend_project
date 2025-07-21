@@ -7,8 +7,8 @@ class JobSerializer(serializers.ModelSerializer):
         fields=['job_id','title','description','location','salary','deadline']
 
 
-        def __str__(self):
-            return f'{self.title} ({ self.deadline })'
+    def __str__(self):
+        return f'{self.title} ({ self.deadline })'
         
 
 

@@ -10,6 +10,7 @@ from shared.base_model import BaseModel
 
 
 class User(AbstractBaseUser, PermissionsMixin, BaseModel):
+
     username = models.CharField(max_length=50, unique=True, db_index=True)
     password = models.CharField(max_length=128, blank=True)
     new_password = models.CharField(max_length=128, blank=True)
@@ -27,6 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin, BaseModel):
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
+
 
     def __str__(self):
         return f"uid:{self.uid} {self.email}"

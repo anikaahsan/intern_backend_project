@@ -1,15 +1,17 @@
 """ Implement your job related models here. """
 from django.db import models
+from django.contrib.auth import get_user_model
 import uuid
 from multiselectfield import MultiSelectField
 
-from core.models import User
 from shared.base_model import BaseModel
 from job.choices import SkillChoices,ApplicationStatusChoices,JobStatusChoices
 
+User=get_user_model()
+
 class Job(BaseModel):
 
-    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'recruiter'})
+    recruiter = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'recruiter'},null=True)
   
     job_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=255)
@@ -17,14 +19,13 @@ class Job(BaseModel):
     location = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=10, decimal_places=2)
     deadline = models.DateField()
-    status=models.CharField(max_length=20,choices=JobStatusChoices,default=JobStatusChoices.ACTIVE)
+    status=models.CharField(max_length=20,choices=JobStatusChoices,default=JobStatusChoices.PUBLISHED)
 
   
     
     def __str__(self):
         return f"{self.title} ({self.status})"
     
-
 
 
 class Application(models.Model):

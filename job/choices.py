@@ -20,5 +20,5 @@ class ApplicationStatusChoices(models.TextChoices):
 
 
 class JobStatusChoices(models.TextChoices):
-    ACTIVE = "ACTIVE", "Active"
-    INACTIVE = "INACTIVE", "Inactive"
+    PUBLISHED = "PUBLISHED", "Published"
+    CLOSED = "CLOSED", "Closed"

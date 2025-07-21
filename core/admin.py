@@ -8,7 +8,7 @@ from shared.base_admin import BaseModelAdmin
 @admin.register(User)
 class UserAdmin(BaseModelAdmin):
     model = User
-    list_display = ["uid", "email", "last_login"]
+    list_display = ["uid", "email", "last_login",'role']
 
     fieldsets = (
         (None, {"fields": ("email", "password", "new_password")}),
@@ -25,6 +25,10 @@ class UserAdmin(BaseModelAdmin):
                     "status",
                     "is_staff",
                     "is_superuser",
+                    
+                    'role',
+                    "groups",            
+                    "user_permissions", 
                 ),
             },
         ),
